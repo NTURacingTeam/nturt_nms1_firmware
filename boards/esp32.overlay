@@ -1,0 +1,105 @@
+/ {
+    aliases {
+        encoder = &pcnt;
+        imu = &jy901b;
+
+        led = &built_in_led;
+        steer-servo = &pwm_servo0;
+        motor-servo = &pwm_servo1;
+
+        micro-ros-serial = &uart2;
+    };
+
+    leds {
+        compatible = "gpio-leds";
+        built_in_led: led_0 {
+            gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+        };
+    };
+
+    servos {
+        pwm_servo0: pwm_servo0 {
+            compatible = "pwm-servo";
+            pwms = <&ledc0 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+            min-pulse = <PWM_USEC(1000)>;
+            neutral-pulse = <PWM_USEC(1500)>;
+            max-pulse = <PWM_USEC(2000)>;
+            initial-duty = <0>;
+        };
+        pwm_servo1: pwm_servo1 {
+            compatible = "pwm-servo";
+            pwms = <&ledc0 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+            min-pulse = <PWM_USEC(1000)>;
+            neutral-pulse = <PWM_USEC(1500)>;
+            max-pulse = <PWM_USEC(2000)>;
+            initial-duty = <0>;
+        };
+    };
+};
+
+&pinctrl {
+    pcnt_default: pcnt_default {
+        group1 {
+            pinmux = <PCNT0_CH0SIG_GPIO5>, <PCNT0_CH0CTRL_GPIO23>;
+            bias-pull-up;
+        };
+    };
+
+    ledc_default: ledc_default {
+        group1 {
+            pinmux = <LEDC_CH0_GPIO33>, <LEDC_CH1_GPIO25>;
+            output-enable;
+        };
+    };
+};
+
+&pcnt {
+    pinctrl-0 = <&pcnt_default>;
+    pinctrl-names = "default";
+    status = "okay";
+    #address-cells = <1>;
+    #size-cells = <0>;
+    unit0@0 {
+        reg = <0>;
+        filter = <100>;
+        #address-cells = <1>;
+        #size-cells = <0>;
+        channelA@0 {
+            reg = <0>;
+            sig-pos-mode = <2>;
+            sig-neg-mode = <1>;
+            ctrl-h-mode = <0>;
+            ctrl-l-mode = <1>;
+        };
+    };
+};
+
+&uart2 {
+    status = "okay";
+};
+
+&i2c0 {
+    clock-frequency = <I2C_BITRATE_FAST>;
+    jy901b: jy901b@50 {
+        compatible = "witmotion,jy901b";
+        reg = <0x50>;
+        status = "okay";
+    };
+};
+
+&ledc0 {
+    pinctrl-0 = <&ledc_default>;
+    pinctrl-names = "default";
+    status = "okay";
+    #address-cells = <1>;
+    #size-cells = <0>;
+    #pwm-cells = <3>;
+    channel0@0 {
+      reg = <0x0>;
+      timer = <0>;
+    };
+    channel1@1 {
+      reg = <0x1>;
+      timer = <0>;
+    };
+};

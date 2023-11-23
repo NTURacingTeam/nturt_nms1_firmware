@@ -1,0 +1,3 @@
+[submodule "libmicroros"]
+	path = libmicroros
+	url = https://github.com/NTURacingTeam/libmicroros.git
