@@ -101,9 +101,10 @@ int micro_ros_pub_speed(struct micro_ros* micro_ros, float speed) {
 /* static function definition ------------------------------------------------*/
 static void micro_ros_entry_point(void* arg1, void* arg2, void* arg3) {
   struct micro_ros* micro_ros = arg1;
+  const struct device* micro_ros_serial = arg2;
 
   int ret;
-  ret = __micro_ros_init(micro_ros, arg2);
+  ret = __micro_ros_init(micro_ros, micro_ros_serial);
 
   struct micro_ros_task task = {
       .id = MICRO_ROS_TASK_INIT,

@@ -8,9 +8,8 @@
 #ifndef NMS1_COMMON_H_
 #define NMS1_COMMON_H_
 
-// zephyr include
-#include <zephyr/kernel.h>
-#include <zephyr/sys/atomic.h>
+#define PUN_TO_LONG(X) (*((long*)&((typeof(X)){X})))
+#define PUN_TO_FLOAT(X) (*((float*)&((typeof(X)){X})))
 
 /// @brief IMU data.
 struct imu_data {

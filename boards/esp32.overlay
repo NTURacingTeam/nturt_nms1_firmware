@@ -20,7 +20,8 @@
     servos {
         pwm_servo0: pwm_servo0 {
             compatible = "pwm-servo";
-            pwms = <&ledc0 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+            // pwms = <&ledc0 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+            pwms = <&mcpwm0 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
             min-pulse = <PWM_USEC(1000)>;
             neutral-pulse = <PWM_USEC(1500)>;
             max-pulse = <PWM_USEC(2000)>;
@@ -28,7 +29,8 @@
         };
         pwm_servo1: pwm_servo1 {
             compatible = "pwm-servo";
-            pwms = <&ledc0 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+            // pwms = <&ledc0 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+            pwms = <&mcpwm0 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
             min-pulse = <PWM_USEC(1000)>;
             neutral-pulse = <PWM_USEC(1500)>;
             max-pulse = <PWM_USEC(2000)>;
@@ -45,11 +47,18 @@
         };
     };
 
-    ledc_default: ledc_default {
-        group1 {
-            pinmux = <LEDC_CH0_GPIO33>, <LEDC_CH1_GPIO25>;
-            output-enable;
-        };
+    // ledc_default: ledc_default {
+    //     group1 {
+    //         pinmux = <LEDC_CH0_GPIO33>, <LEDC_CH1_GPIO25>;
+    //         output-enable;
+    //     };
+    // };
+
+    mcpwm0_default: mcpwm0_default {
+      group1 {
+        pinmux = <MCPWM0_OUT0A_GPIO33>, <MCPWM0_OUT0B_GPIO25>;
+        output-enable;
+      };
     };
 };
 
@@ -87,19 +96,27 @@
     };
 };
 
-&ledc0 {
-    pinctrl-0 = <&ledc_default>;
+// &ledc0 {
+//     pinctrl-0 = <&ledc_default>;
+//     pinctrl-names = "default";
+//     status = "okay";
+//     #address-cells = <1>;
+//     #size-cells = <0>;
+//     #pwm-cells = <3>;
+//     channel0@0 {
+//       reg = <0x0>;
+//       timer = <0>;
+//     };
+//     channel1@1 {
+//       reg = <0x1>;
+//       timer = <0>;
+//     };
+// };
+
+&mcpwm0 {
+    pinctrl-0 = <&mcpwm0_default>;
     pinctrl-names = "default";
     status = "okay";
-    #address-cells = <1>;
-    #size-cells = <0>;
-    #pwm-cells = <3>;
-    channel0@0 {
-      reg = <0x0>;
-      timer = <0>;
-    };
-    channel1@1 {
-      reg = <0x1>;
-      timer = <0>;
-    };
+    prescale = <(160 - 1)>;
+    prescale-timer0 = <(100 - 1)>;
 };
